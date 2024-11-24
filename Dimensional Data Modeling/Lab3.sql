@@ -11,7 +11,7 @@
 --     PRIMARY KEY (identifier, type)
 -- );
 
-CREATE TABLE edge (
+CREATE TABLE edges (
     subject_identifier TEXT,
     subject_type vertex_type,
     object_identifier TEXT,
