@@ -10,6 +10,10 @@
 --     date Date,
 --     PRIMARY KEY (user_id, date)
 -- )
+-- CASE WHEN y.dates_active IS NULL THEN ARRAY[t.date_active]
+-- 		WHEN t.date_active IS NULL THEN y.dates_active
+-- 		ELSE ARRAY[t.date_active] || y.dates_active
+-- 		END
 
 INSERT INTO users_cumulated
 WITH yesterday AS (
@@ -18,7 +22,7 @@ WITH yesterday AS (
 	WHERE date = DATE('2023-01-30')
 ), today AS (
 	SELECT
-		CAST(user_id AS TEXT) AS user_id,
+		 user_id,
 		DATE(CAST(event_time AS TIMESTAMP)) AS date_active
 	FROM events
 	WHERE DATE(CAST(event_time AS TIMESTAMP)) = DATE('2023-01-31')
@@ -29,16 +33,11 @@ WITH yesterday AS (
 
 SELECT
 	COALESCE(t.user_id, y.user_id) AS user_id,
-	CASE
-		WHEN y.dates_active IS NULL THEN ARRAY[t.date_active]
-		WHEN t.date_active IS NULL THEN y.dates_active
-		ELSE ARRAY[t.date_active] || y.dates_active
-		END
-		AS dates_active,
+	Null AS dates_active,
 	COALESCE(t.date_active, y.date + INTERVAL '1 day') AS date
 FROM today t
 FULL OUTER JOIN yesterday y
-ON t.user_id = y.user_id
+ON t.user_id = y.user_id;
 
 
 WITH users AS (
