@@ -92,3 +92,13 @@ from
              fct_game_details gd
 group by 1
 order by 4 desc;
+
+WITH deduped AS (
+    SELECT gd.*,
+           ROW_NUMBER() OVER (PARTITION BY gd.game_id, gd.team_id, gd.player_id ORDER BY gd.game_date_est) AS row_num
+    FROM game_details gd
+)
+-- Now insert the deduplicated rows into the target table or perform other operations as needed
+SELECT *
+FROM deduped
+WHERE row_num = 1;
