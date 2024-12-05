@@ -7,9 +7,6 @@
 -- 	PRIMARY KEY (user_id, month_start, metric_name)
 -- );
 
-
---DELETE FROM array_metrics
-
 INSERT INTO array_metrics
 WITH daily_aggregate AS (
 	SELECT
